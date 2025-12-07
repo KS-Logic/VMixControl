@@ -1,52 +1,39 @@
-﻿namespace VMixHTTP.DynamicVariables;
+﻿namespace VMixHTTP;
 
-public class DynamicVariables
+/// <summary>
+/// Partial class containing dynamic variables vMix API commands.
+/// </summary>
+public partial class vMixClient
 {
-    internal static string SetDynamicInput1(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetDynamicInput1&Value={input}";
-    }
+    #region Dynamic Inputs
     
-    internal static string SetDynamicInput2(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetDynamicInput2&Value={input}";
-    }
+    /// <summary>Sets dynamic input 1.</summary>
+    public Task<string> SetDynamicInput1(string input) => SendAsync(new { Value = input });
     
-    internal static string SetDynamicInput3(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetDynamicInput3&Value={input}";
-    }
+    /// <summary>Sets dynamic input 2.</summary>
+    public Task<string> SetDynamicInput2(string input) => SendAsync(new { Value = input });
     
-    internal static string SetDynamicInput4(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetDynamicInput4&Value={input}";
-    }
+    /// <summary>Sets dynamic input 3.</summary>
+    public Task<string> SetDynamicInput3(string input) => SendAsync(new { Value = input });
     
-    internal static string SetDynamicValue1(string value)
-    {
-        value = Uri.EscapeDataString(value);
-        return $"Function=SetDynamicValue1&Value={value}";
-    }
+    /// <summary>Sets dynamic input 4.</summary>
+    public Task<string> SetDynamicInput4(string input) => SendAsync(new { Value = input });
     
-    internal static string SetDynamicValue2(string value)
-    {
-        value = Uri.EscapeDataString(value);
-        return $"Function=SetDynamicValue2&Value={value}";
-    }
+    #endregion
+
+    #region Dynamic Values
     
-    internal static string SetDynamicValue3(string value)
-    {
-        value = Uri.EscapeDataString(value);
-        return $"Function=SetDynamicValue3&Value={value}";
-    }
+    /// <summary>Sets dynamic value 1.</summary>
+    public Task<string> SetDynamicValue1(string value) => SendAsync(new { Value = value });
     
-    internal static string SetDynamicValue4(string value)
-    {
-        value = Uri.EscapeDataString(value);
-        return $"Function=SetDynamicValue4&Value={value}";
-    }
+    /// <summary>Sets dynamic value 2.</summary>
+    public Task<string> SetDynamicValue2(string value) => SendAsync(new { Value = value });
+    
+    /// <summary>Sets dynamic value 3.</summary>
+    public Task<string> SetDynamicValue3(string value) => SendAsync(new { Value = value });
+    
+    /// <summary>Sets dynamic value 4.</summary>
+    public Task<string> SetDynamicValue4(string value) => SendAsync(new { Value = value });
+    
+    #endregion
 }

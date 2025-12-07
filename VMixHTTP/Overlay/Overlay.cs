@@ -1,6 +1,9 @@
-﻿namespace VMixHTTP.Overlay;
+﻿namespace VMixHTTP;
 
-public class Overlay
+/// <summary>
+/// Partial class containing overlay-related vMix API commands.
+/// </summary>
+public partial class vMixClient
 {
-    
+    // Overlay commands will be added here
 }

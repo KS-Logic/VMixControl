@@ -1,144 +1,91 @@
-﻿using System.Globalization;
+﻿namespace VMixHTTP;
 
-namespace VMixHTTP.ColourCorrection;
-
-internal class ColourCorrection
+/// <summary>
+/// Partial class containing colour correction vMix API commands.
+/// </summary>
+public partial class vMixClient
 {
-    internal static string ColourCorrectionAuto(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=ColourCorrectionAuto&Input={input}";
-    }
+    #region Colour Correction Auto/Reset
     
-    internal static string ColourCorrectionReset(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=ColourCorrectionReset&Input={input}";
-    }
+    /// <summary>Auto colour correction for the specified input.</summary>
+    public Task<string> ColourCorrectionAuto(string input) => SendAsync(new { Input = input });
     
-    internal static string SetAlpha(string input, int alpha)
-    {
-        alpha = Math.Clamp(alpha, 0, 255);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetAlpha&Input={input}&Value={alpha}";
-    }
+    /// <summary>Resets colour correction for the specified input.</summary>
+    public Task<string> ColourCorrectionReset(string input) => SendAsync(new { Input = input });
     
-    internal static string SetCCGainB(string input, double gain)
-    {
-        gain = Math.Clamp(gain, 0, 2);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCGainBlue&Input={input}&Value={gain.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    #endregion
+
+    #region Alpha
     
-    internal static string SetCCGainG(string input, double gain)
-    {
-        gain = Math.Clamp(gain, 0, 2);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCGainGreen&Input={input}&Value={gain.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Sets the alpha value for the specified input (0-255).</summary>
+    public Task<string> SetAlpha(string input, int alpha) => SendAsync(new { Input = input, Value = Math.Clamp(alpha, 0, 255) });
     
-    internal static string SetCCGainR(string input, double gain)
-    {
-        gain = Math.Clamp(gain, 0, 2);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCGainRed&Input={input}&Value={gain.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    #endregion
+
+    #region CC Gain
     
-    internal static string SetCCGainRGB(string input, double gain)
-    {
-        gain = Math.Clamp(gain, 0, 2);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCGainRGB&Input={input}&Value={gain.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Sets the blue gain for colour correction (0-2). Note: vMix API function is "SetCCGainBlue".</summary>
+    public Task<string> SetCCGainB(string input, double gain) => SendAsync(new { Input = input, Value = Math.Clamp(gain, 0, 2) }, "SetCCGainBlue");
     
-    internal static string SetCCGainY(string input, double gain)
-    {
-        gain = Math.Clamp(gain, 0, 2);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCGainYellow&Input={input}&Value={gain.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Sets the green gain for colour correction (0-2). Note: vMix API function is "SetCCGainGreen".</summary>
+    public Task<string> SetCCGainG(string input, double gain) => SendAsync(new { Input = input, Value = Math.Clamp(gain, 0, 2) }, "SetCCGainGreen");
     
-    internal static string SetCCGammaB(string input, double gamma)
-    {
-        gamma = Math.Clamp(gamma, -1, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCGammaBlue&Input={input}&Value={gamma.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Sets the red gain for colour correction (0-2). Note: vMix API function is "SetCCGainRed".</summary>
+    public Task<string> SetCCGainR(string input, double gain) => SendAsync(new { Input = input, Value = Math.Clamp(gain, 0, 2) }, "SetCCGainRed");
     
-    internal static string SetCCGammaG(string input, double gamma)
-    {
-        gamma = Math.Clamp(gamma, -1, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCGammaGreen&Input={input}&Value={gamma.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Sets the RGB gain for colour correction (0-2).</summary>
+    public Task<string> SetCCGainRGB(string input, double gain) => SendAsync(new { Input = input, Value = Math.Clamp(gain, 0, 2) });
     
-    internal static string SetCCGammaR(string input, double gamma)
-    {
-        gamma = Math.Clamp(gamma, -1, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCGammaRed&Input={input}&Value={gamma.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Sets the yellow gain for colour correction (0-2). Note: vMix API function is "SetCCGainYellow".</summary>
+    public Task<string> SetCCGainY(string input, double gain) => SendAsync(new { Input = input, Value = Math.Clamp(gain, 0, 2) }, "SetCCGainYellow");
     
-    internal static string SetCCGammaRGB(string input, double gamma)
-    {
-        gamma = Math.Clamp(gamma,-1, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCGammaRGB&Input={input}&Value={gamma.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    #endregion
+
+    #region CC Gamma
     
-    internal static string SetCCGammaY(string input, double gamma)
-    {
-        gamma = Math.Clamp(gamma, -1, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCGammaYellow&Input={input}&Value={gamma.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Sets the blue gamma for colour correction (-1 to 1). Note: vMix API function is "SetCCGammaBlue".</summary>
+    public Task<string> SetCCGammaB(string input, double gamma) => SendAsync(new { Input = input, Value = Math.Clamp(gamma, -1, 1) }, "SetCCGammaBlue");
     
-    internal static string SetCCHue(string input, double hue)
-    {
-        hue = Math.Clamp(hue, -1, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCHue&Input={input}&Value={hue.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Sets the green gamma for colour correction (-1 to 1). Note: vMix API function is "SetCCGammaGreen".</summary>
+    public Task<string> SetCCGammaG(string input, double gamma) => SendAsync(new { Input = input, Value = Math.Clamp(gamma, -1, 1) }, "SetCCGammaGreen");
     
-    internal static string SetCCLiftB(string input, double lift)
-    {
-        lift = Math.Clamp(lift, -1, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCLiftBlue&Input={input}&Value={lift.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Sets the red gamma for colour correction (-1 to 1). Note: vMix API function is "SetCCGammaRed".</summary>
+    public Task<string> SetCCGammaR(string input, double gamma) => SendAsync(new { Input = input, Value = Math.Clamp(gamma, -1, 1) }, "SetCCGammaRed");
     
-    internal static string SetCCLiftG(string input, double lift)
-    {
-        lift = Math.Clamp(lift, -1, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCLiftGreen&Input={input}&Value={lift.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Sets the RGB gamma for colour correction (-1 to 1).</summary>
+    public Task<string> SetCCGammaRGB(string input, double gamma) => SendAsync(new { Input = input, Value = Math.Clamp(gamma, -1, 1) });
     
-    internal static string SetCCLiftR(string input, double lift)
-    {
-        lift = Math.Clamp(lift, -1, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCLiftRed&Input={input}&Value={lift.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Sets the yellow gamma for colour correction (-1 to 1). Note: vMix API function is "SetCCGammaYellow".</summary>
+    public Task<string> SetCCGammaY(string input, double gamma) => SendAsync(new { Input = input, Value = Math.Clamp(gamma, -1, 1) }, "SetCCGammaYellow");
     
-    internal static string SetCCLiftRGB(string input, double lift)
-    {
-        lift = Math.Clamp(lift, -1, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCLiftRGB&Input={input}&Value={lift.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    #endregion
+
+    #region CC Hue and Saturation
     
-    internal static string SetCCLiftY(string input, double lift)
-    {
-        lift = Math.Clamp(lift, -1, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCLiftYellow&Input={input}&Value={lift.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Sets the hue for colour correction (-1 to 1).</summary>
+    public Task<string> SetCCHue(string input, double hue) => SendAsync(new { Input = input, Value = Math.Clamp(hue, -1, 1) });
     
-    internal static string SetCCSaturation(string input, double saturation)
-    {
-        saturation = Math.Clamp(saturation, -1, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetCCSaturation&Input={input}&Value={saturation.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Sets the saturation for colour correction (-1 to 1).</summary>
+    public Task<string> SetCCSaturation(string input, double saturation) => SendAsync(new { Input = input, Value = Math.Clamp(saturation, -1, 1) });
+    
+    #endregion
+
+    #region CC Lift
+    
+    /// <summary>Sets the blue lift for colour correction (-1 to 1). Note: vMix API function is "SetCCLiftBlue".</summary>
+    public Task<string> SetCCLiftB(string input, double lift) => SendAsync(new { Input = input, Value = Math.Clamp(lift, -1, 1) }, "SetCCLiftBlue");
+    
+    /// <summary>Sets the green lift for colour correction (-1 to 1). Note: vMix API function is "SetCCLiftGreen".</summary>
+    public Task<string> SetCCLiftG(string input, double lift) => SendAsync(new { Input = input, Value = Math.Clamp(lift, -1, 1) }, "SetCCLiftGreen");
+    
+    /// <summary>Sets the red lift for colour correction (-1 to 1). Note: vMix API function is "SetCCLiftRed".</summary>
+    public Task<string> SetCCLiftR(string input, double lift) => SendAsync(new { Input = input, Value = Math.Clamp(lift, -1, 1) }, "SetCCLiftRed");
+    
+    /// <summary>Sets the RGB lift for colour correction (-1 to 1).</summary>
+    public Task<string> SetCCLiftRGB(string input, double lift) => SendAsync(new { Input = input, Value = Math.Clamp(lift, -1, 1) });
+    
+    /// <summary>Sets the yellow lift for colour correction (-1 to 1). Note: vMix API function is "SetCCLiftYellow".</summary>
+    public Task<string> SetCCLiftY(string input, double lift) => SendAsync(new { Input = input, Value = Math.Clamp(lift, -1, 1) }, "SetCCLiftYellow");
+    
+    #endregion
 }

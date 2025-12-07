@@ -1,6 +1,9 @@
-﻿namespace VMixHTTP.PTZ;
+﻿namespace VMixHTTP;
 
-public class PTZ
+/// <summary>
+/// Partial class containing PTZ-related vMix API commands.
+/// </summary>
+public partial class vMixClient
 {
-    
+    // PTZ commands will be added here
 }

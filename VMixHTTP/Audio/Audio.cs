@@ -1,598 +1,348 @@
-﻿using System.Globalization;
+﻿namespace VMixHTTP;
 
-namespace VMixHTTP.Audio;
-
-internal static class Audio
+/// <summary>
+/// Partial class containing audio-related vMix API commands.
+/// </summary>
+public partial class vMixClient
 {
-    internal static string AudioMuteUnmute(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=Audio&Input={input}";
-    }
+    #region Audio Basic Controls
+    
+    /// <summary>Toggles audio mute/unmute for the specified input. Note: vMix API function is "Audio".</summary>
+    public Task<string> AudioMuteUnmute(string input) => SendAsync(new { Input = input }, "Audio");
+    
+    /// <summary>Toggles audio auto mode for the specified input.</summary>
+    public Task<string> AudioAuto(string input) => SendAsync(new { Input = input });
+    
+    /// <summary>Disables audio auto mode for the specified input.</summary>
+    public Task<string> AudioAutoOff(string input) => SendAsync(new { Input = input });
+    
+    /// <summary>Enables audio auto mode for the specified input.</summary>
+    public Task<string> AudioAutoOn(string input) => SendAsync(new { Input = input });
+    
+    /// <summary>Toggles audio bus assignment for the specified input.</summary>
+    public Task<string> AudioBus(string input, string bus) => SendAsync(new { Input = input, Value = bus });
+    
+    /// <summary>Removes audio bus assignment for the specified input.</summary>
+    public Task<string> AudioBusOff(string input, string bus) => SendAsync(new { Input = input, Value = bus });
+    
+    /// <summary>Assigns audio bus for the specified input.</summary>
+    public Task<string> AudioBusOn(string input, string bus) => SendAsync(new { Input = input, Value = bus });
+    
+    /// <summary>Applies a matrix preset to the audio channel.</summary>
+    public Task<string> AudioChannelApplyMatrixPreset(string input, string preset) => SendAsync(new { Input = input, Value = preset });
+    
+    /// <summary>Shows or hides the audio mixer.</summary>
+    public Task<string> AudioMixerShowHide() => SendAsync();
+    
+    /// <summary>Disables audio for the specified input.</summary>
+    public Task<string> AudioOff(string input) => SendAsync(new { Input = input });
+    
+    /// <summary>Enables audio for the specified input.</summary>
+    public Task<string> AudioOn(string input) => SendAsync(new { Input = input });
+    
+    #endregion
 
-    internal static string AudioAuto(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=AudioAuto&Input={input}";
-    }
+    #region Audio Plugins
+    
+    /// <summary>Enables audio plugin for the specified input.</summary>
+    public Task<string> AudioPluginOn(string input, int pluginNumber) => SendAsync(new { Input = input, Value = pluginNumber });
+    
+    /// <summary>Disables audio plugin for the specified input.</summary>
+    public Task<string> AudioPluginOff(string input, int pluginNumber) => SendAsync(new { Input = input, Value = pluginNumber });
+    
+    /// <summary>Toggles audio plugin for the specified input.</summary>
+    public Task<string> AudioPluginOnOff(string input, int pluginNumber) => SendAsync(new { Input = input, Value = pluginNumber });
+    
+    /// <summary>Shows audio plugin UI for the specified input.</summary>
+    public Task<string> AudioPluginShow(string input, int pluginNumber) => SendAsync(new { Input = input, Value = pluginNumber });
+    
+    #endregion
 
-    internal static string AudioAutoOff(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=AudioAutoOff&Input={input}";
-    }
+    #region Bus A Audio
+    
+    /// <summary>Toggles Bus A audio.</summary>
+    public Task<string> BusAAudio() => SendAsync();
+    
+    /// <summary>Disables Bus A audio.</summary>
+    public Task<string> BusAAudioOff() => SendAsync();
+    
+    /// <summary>Enables Bus A audio.</summary>
+    public Task<string> BusAAudioOn() => SendAsync();
+    
+    /// <summary>Disables Bus A audio plugin.</summary>
+    public Task<string> BusAAudioPluginOff(int pluginNumber) => SendAsync(new { Value = pluginNumber });
+    
+    /// <summary>Enables Bus A audio plugin.</summary>
+    public Task<string> BusAAudioPluginOn(int pluginNumber) => SendAsync(new { Value = pluginNumber });
+    
+    /// <summary>Toggles Bus A audio plugin.</summary>
+    public Task<string> BusAAudioPluginOnOff(int pluginNumber) => SendAsync(new { Value = pluginNumber });
+    
+    /// <summary>Shows Bus A audio plugin UI.</summary>
+    public Task<string> BusAAudioPluginShow(int pluginNumber) => SendAsync(new { Value = pluginNumber });
+    
+    #endregion
 
-    internal static string AudioAutoOn(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=AudioAutoOn&Input={input}";
-    }
+    #region Bus B Audio
     
-    internal static string AudioBus(string input, string bus)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=AudioBus&Input={input}&Value={bus}";
-    }
+    /// <summary>Toggles Bus B audio.</summary>
+    public Task<string> BusBAudio() => SendAsync();
     
-    internal static string AudioBusOff(string input, string bus)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=AudioBusOff&Input={input}&Value={bus}";
-    }
+    /// <summary>Disables Bus B audio.</summary>
+    public Task<string> BusBAudioOff() => SendAsync();
     
-    internal static string AudioBusOn(string input, string bus)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=AudioBusOn&Input={input}&Value={bus}";
-    }
+    /// <summary>Enables Bus B audio.</summary>
+    public Task<string> BusBAudioOn() => SendAsync();
     
-    internal static string AudioChannelApplyMatrixPreset(string input, string preset)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=AudioChannelApplyMatrixPreset&Input={input}&Value={preset}";
-    }
+    /// <summary>Disables Bus B audio plugin.</summary>
+    public Task<string> BusBAudioPluginOff(int pluginNumber) => SendAsync(new { Value = pluginNumber });
     
-    internal static string AudioMixerShowHide()
-    {
-        return "Function=AudioMixerShowHide";
-    }
+    /// <summary>Enables Bus B audio plugin.</summary>
+    public Task<string> BusBAudioPluginOn(int pluginNumber) => SendAsync(new { Value = pluginNumber });
     
-    internal static string AudioOff(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=AudioOff&Input={input}";
-    }
+    /// <summary>Toggles Bus B audio plugin.</summary>
+    public Task<string> BusBAudioPluginOnOff(int pluginNumber) => SendAsync(new { Value = pluginNumber });
     
-    internal static string AudioOn(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=AudioOn&Input={input}";
-    }
+    /// <summary>Shows Bus B audio plugin UI.</summary>
+    public Task<string> BusBAudioPluginShow(int pluginNumber) => SendAsync(new { Value = pluginNumber });
     
-    internal static string AudioPluginOn(string input, int pluginNumber)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=AudioPluginOn&Input={input}&Value={pluginNumber}";
-    }
-    
-    internal static string AudioPluginOff(string input, int pluginNumber)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=AudioPluginOff&Input={input}&Value={pluginNumber}";
-    }
-    
-    internal static string AudioPluginOnOff(string input, int pluginNumber)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=AudioPluginOnOff&Input={input}&Value={pluginNumber}";
-    }
-    
-    internal static string AudioPluginShow(string input, int pluginNumber)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=AudioPluginShow&Input={input}&Value={pluginNumber}";
-    }
+    #endregion
 
-    internal static string BusAAudio()
-    {
-        return "Function=BusAAudio";
-    }
+    #region Bus X Audio (Generic Bus)
     
-    internal static string BusAAudioOff()
-    {
-        return "Function=BusAAudioOff";
-    }
+    /// <summary>Toggles Bus X audio.</summary>
+    public Task<string> BusXAudio(string bus) => SendAsync(new { Value = bus });
     
-    internal static string BusAAudioOn()
-    {
-        return "Function=BusAAudioOn";
-    }
+    /// <summary>Disables Bus X audio.</summary>
+    public Task<string> BusXAudioOff(string bus) => SendAsync(new { Value = bus });
+    
+    /// <summary>Enables Bus X audio.</summary>
+    public Task<string> BusXAudioOn(string bus) => SendAsync(new { Value = bus });
+    
+    /// <summary>Disables Bus X audio plugin.</summary>
+    public Task<string> BusXAudioPluginOff(string bus, int pluginNumber) => SendAsync(new { Value = $"{bus},{pluginNumber}" });
+    
+    /// <summary>Enables Bus X audio plugin.</summary>
+    public Task<string> BusXAudioPluginOn(string bus, int pluginNumber) => SendAsync(new { Value = $"{bus},{pluginNumber}" });
+    
+    /// <summary>Toggles Bus X audio plugin.</summary>
+    public Task<string> BusXAudioPluginOnOff(string bus, int pluginNumber) => SendAsync(new { Value = $"{bus},{pluginNumber}" });
+    
+    /// <summary>Shows Bus X audio plugin UI.</summary>
+    public Task<string> BusXAudioPluginShow(string bus, int pluginNumber) => SendAsync(new { Value = $"{bus},{pluginNumber}" });
+    
+    /// <summary>Toggles Bus X send to master.</summary>
+    public Task<string> BusXSendToMaster(string bus) => SendAsync(new { Value = bus });
+    
+    /// <summary>Enables Bus X send to master.</summary>
+    public Task<string> BusXSendToMasterOn(string bus) => SendAsync(new { Value = bus });
+    
+    /// <summary>Disables Bus X send to master.</summary>
+    public Task<string> BusXSendToMasterOff(string bus) => SendAsync(new { Value = bus });
+    
+    /// <summary>Toggles Bus X solo.</summary>
+    public Task<string> BusXSolo(string bus) => SendAsync(new { Value = bus });
+    
+    /// <summary>Enables Bus X solo.</summary>
+    public Task<string> BusXSoloOn(string bus) => SendAsync(new { Value = bus });
+    
+    /// <summary>Disables Bus X solo.</summary>
+    public Task<string> BusXSoloOff(string bus) => SendAsync(new { Value = bus });
+    
+    #endregion
 
-    internal static string BusAAudioPluginOff(int pluginNumber)
-    {
-        return $"Function=BusAAudioPluginOff&Value={pluginNumber}";
-    }
+    #region Master Audio
     
-    internal static string BusAAudioPluginOn(int pluginNumber)
-    {
-        return $"Function=BusAAudioPluginOn&Value={pluginNumber}";
-    }
+    /// <summary>Toggles master audio.</summary>
+    public Task<string> MasterAudio() => SendAsync();
     
-    internal static string BusAAudioPluginOnOff(int pluginNumber)
-    {
-        return $"Function=BusAAudioPluginOnOff&Value={pluginNumber}";
-    }
+    /// <summary>Disables master audio.</summary>
+    public Task<string> MasterAudioOff() => SendAsync();
     
-    internal static string BusAAudioPluginShow(int pluginNumber)
-    {
-        return $"Function=BusAAudioPluginShow&Value={pluginNumber}";
-    }
+    /// <summary>Enables master audio.</summary>
+    public Task<string> MasterAudioOn() => SendAsync();
     
-    internal static string BusBAudio()
-    {
-        return "Function=BusBAudio";
-    }
+    /// <summary>Disables master audio plugin.</summary>
+    public Task<string> MasterAudioPluginOff(int pluginNumber) => SendAsync(new { Value = pluginNumber });
     
-    internal static string BusBAudioOff()
-    {
-        return "Function=BusBAudioOff";
-    }
+    /// <summary>Enables master audio plugin.</summary>
+    public Task<string> MasterAudioPluginOn(int pluginNumber) => SendAsync(new { Value = pluginNumber });
     
-    internal static string BusBAudioOn()
-    {
-        return "Function=BusBAudioOn";
-    }
+    /// <summary>Toggles master audio plugin.</summary>
+    public Task<string> MasterAudioPluginOnOff(int pluginNumber) => SendAsync(new { Value = pluginNumber });
     
-    internal static string BusBAudioPluginOff(int pluginNumber)
-    {
-        return $"Function=BusBAudioPluginOff&Value={pluginNumber}";
-    }
+    /// <summary>Shows master audio plugin UI.</summary>
+    public Task<string> MasterAudioPluginShow(int pluginNumber) => SendAsync(new { Value = pluginNumber });
     
-    internal static string BusBAudioPluginOn(int pluginNumber)
-    {
-        return $"Function=BusBAudioPluginOn&Value={pluginNumber}";
-    }
-    
-    internal static string BusBAudioPluginOnOff(int pluginNumber)
-    {
-        return $"Function=BusBAudioPluginOnOff&Value={pluginNumber}";
-    }
-    
-    internal static string BusBAudioPluginShow(int pluginNumber)
-    {
-        return $"Function=BusBAudioPluginShow&Value={pluginNumber}";
-    }
-    
-    internal static string BusXAudio(string value)
-    {
-        return $"Function=BusXAudio&Value={value}";
-    }
-    
-    internal static string BusXAudioOff(string value)
-    {
-        return $"Function=BusXAudioOff&Value={value}";
-    }
-    
-    internal static string BusXAudioOn(string value)
-    {
-        return $"Function=BusXAudioOn&Value={value}";
-    }
-    
-    internal static string BusXAudioPluginOff(string value, int pluginNumber)
-    {
-        return $"Function=BusXAudioPluginOff&Value={value},{pluginNumber}";
-    }
-    
-    internal static string BusXAudioPluginOn(string value, int pluginNumber)
-    {
-        return $"Function=BusXAudioPluginOn&Value={value},{pluginNumber}";
-    }
-    
-    internal static string BusXAudioPluginOnOff(string value, int pluginNumber)
-    {
-        return $"Function=BusXAudioPluginOnOff&Value={value},{pluginNumber}";
-    }
-    
-    internal static string BusXAudioPluginShow(string value, int pluginNumber)
-    {
-        return $"Function=BusXAudioPluginShow&Value={value},{pluginNumber}";
-    }
-    
-    internal static string BusXSendToMaster(string value)
-    {
-        return $"Function=BusXSendToMaster&Value={value}";
-    }
-    
-    internal static string BusXSendToMasterOn(string value)
-    {
-        return $"Function=BusXSendToMasterOn&Value={value}";
-    }
-    
-    internal static string BusXSendToMasterOff(string value)
-    {
-        return $"Function=BusXSendToMasterOff&Value={value}";
-    }
-    
-    internal static string BusXSolo(string value)
-    {
-        return $"Function=BusXSolo&Value={value}";
-    }
-    
-    internal static string BusXSoloOn(string value)
-    {
-        return $"Function=BusXSoloOn&Value={value}";
-    }
-    
-    internal static string BusXSoloOff(string value)
-    {
-        return $"Function=BusXSoloOff&Value={value}";
-    }
-    
-    internal static string MasterAudio()
-    {
-        return "Function=MasterAudio";
-    }
-    
-    internal static string MasterAudioOff()
-    {
-        return "Function=MasterAudioOff";
-    }
-    
-    internal static string MasterAudioOn()
-    {
-        return "Function=MasterAudioOn";
-    }
-    
-    internal static string MasterAudioPluginOff(int pluginNumber)
-    {
-        return $"Function=MasterAudioPluginOff&Value={pluginNumber}";
-    }
-    
-    internal static string MasterAudioPluginOn(int pluginNumber)
-    {
-        return $"Function=MasterAudioPluginOn&Value={pluginNumber}";
-    }
-    
-    internal static string MasterAudioPluginOnOff(int pluginNumber)
-    {
-        return $"Function=MasterAudioPluginOnOff&Value={pluginNumber}";
-    }
-    
-    internal static string MasterAudioPluginShow(int pluginNumber)
-    {
-        return $"Function=MasterAudioPluginShow&Value={pluginNumber}";
-    }
-    
-    internal static string SetBalance(string input, double balance)
-    {
-        balance = Math.Clamp(balance, -1, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetBalance&Input={input}&Value={balance.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
-    
-    internal static string SetBusAVolume(int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        return $"Function=SetBusAVolume&Value={volume}";
-    }
-    
-    internal static string SetBusBVolume(int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        return $"Function=SetBusBVolume&Value={volume}";
-    }
-    
-    internal static string SetBusCVolume(int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        return $"Function=SetBusCVolume&Value={volume}";
-    }
-    
-    internal static string SetBusDVolume(int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        return $"Function=SetBusDVolume&Value={volume}";
-    }
-    
-    internal static string SetBusEVolume(int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        return $"Function=SetBusEVolume&Value={volume}";
-    }
-    
-    internal static string SetBusFVolume(int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        return $"Function=SetBusFVolume&Value={volume}";
-    }
-    
-    internal static string SetBusGVolume(int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        return $"Function=SetBusGVolume&Value={volume}";
-    }
-    
-    internal static string SetGain(string input, double gain)
-    {
-        gain = Math.Clamp(gain, 0, 24);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetGain&Input={input}&Value={gain.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
-    
-    internal static string SetGainChannel1(string input, double gain)
-    {
-        gain = Math.Clamp(gain, 0, 24);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetGainChannel1&Input={input}&Value={gain.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
-    
-    internal static string SetGainChannel2(string input, double gain)
-    {
-        gain = Math.Clamp(gain, 0, 24);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetGainChannel2&Input={input}&Value={gain.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
-    
-    internal static string SetHeadphonesVolume(int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        return $"Function=SetHeadphonesVolume&Value={volume}";
-    }
-    
-    internal static string SetMasterVolume(int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        return $"Function=SetMasterVolume&Value={volume}";
-    }
-    
-    internal static string SetVolume(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolume&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeBusMixer(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeBusMixer&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeBusMixerA(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeBusMixerA&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeBusMixerB(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeBusMixerB&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeBusMixerC(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeBusMixerC&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeBusMixerD(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeBusMixerD&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeBusMixerE(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeBusMixerE&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeBusMixerF(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeBusMixerF&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeBusMixerG(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeBusMixerG&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeBusMixerM(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeBusMixerM&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannel1(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannel1&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannel2(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannel2&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer&Input={input}&Value={volume}";
-    }
-    
-    //SetVolumeChannelMixer1-16
-    
-    internal static string SetVolumeChannelMixer1(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer1&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer2(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer2&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer3(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer3&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer4(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer4&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer5(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer5&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer6(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer6&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer7(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer7&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer8(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer8&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer9(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer9&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer10(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer10&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer11(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer11&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer12(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer12&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer13(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer13&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer14(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer14&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer15(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer15&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeChannelMixer16(string input, int volume)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeChannelMixer16&Input={input}&Value={volume}";
-    }
-    
-    internal static string SetVolumeFade(string input, int volume, int duration)
-    {
-        volume = Math.Clamp(volume, 0, 100);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetVolumeFade&Input={input}&Value={volume},{duration}";
-    }
-    
-    internal static string Solo(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=Solo&Input={input}";
-    }
-    
-    internal static string SoloAllOff()
-    {
-        return "Function=SoloAllOff";
-    }
-    
-    internal static string SoloOff(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=SoloOff&Input={input}";
-    }
-    
-    internal static string SoloOn(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=SoloOn&Input={input}";
-    }
+    #endregion
 
-    internal static string SoloPFL()
-    {
-        return "Function=SoloPFL";
-    }
+    #region Set Balance and Gain
     
-    internal static string SoloPFLOff()
-    {
-        return "Function=SoloPFLOff";
-    }
+    /// <summary>Sets the balance for the specified input (-1 to 1).</summary>
+    public Task<string> SetBalance(string input, double balance) => SendAsync(new { Input = input, Value = Math.Clamp(balance, -1, 1) });
     
-    internal static string SoloPFLOn()
-    {
-        return "Function=SoloPFLOn";
-    }
+    /// <summary>Sets the gain for the specified input (0 to 24 dB).</summary>
+    public Task<string> SetGain(string input, double gain) => SendAsync(new { Input = input, Value = Math.Clamp(gain, 0, 24) });
     
+    /// <summary>Sets the gain for channel 1 of the specified input (0 to 24 dB).</summary>
+    public Task<string> SetGainChannel1(string input, double gain) => SendAsync(new { Input = input, Value = Math.Clamp(gain, 0, 24) });
+    
+    /// <summary>Sets the gain for channel 2 of the specified input (0 to 24 dB).</summary>
+    public Task<string> SetGainChannel2(string input, double gain) => SendAsync(new { Input = input, Value = Math.Clamp(gain, 0, 24) });
+    
+    #endregion
+
+    #region Set Bus Volume
+    
+    /// <summary>Sets Bus A volume (0-100).</summary>
+    public Task<string> SetBusAVolume(int volume) => SendAsync(new { Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets Bus B volume (0-100).</summary>
+    public Task<string> SetBusBVolume(int volume) => SendAsync(new { Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets Bus C volume (0-100).</summary>
+    public Task<string> SetBusCVolume(int volume) => SendAsync(new { Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets Bus D volume (0-100).</summary>
+    public Task<string> SetBusDVolume(int volume) => SendAsync(new { Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets Bus E volume (0-100).</summary>
+    public Task<string> SetBusEVolume(int volume) => SendAsync(new { Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets Bus F volume (0-100).</summary>
+    public Task<string> SetBusFVolume(int volume) => SendAsync(new { Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets Bus G volume (0-100).</summary>
+    public Task<string> SetBusGVolume(int volume) => SendAsync(new { Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets headphones volume (0-100).</summary>
+    public Task<string> SetHeadphonesVolume(int volume) => SendAsync(new { Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets master volume (0-100).</summary>
+    public Task<string> SetMasterVolume(int volume) => SendAsync(new { Value = Math.Clamp(volume, 0, 100) });
+    
+    #endregion
+
+    #region Set Input Volume
+    
+    /// <summary>Sets volume for the specified input (0-100).</summary>
+    public Task<string> SetVolume(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets bus mixer volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeBusMixer(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets Bus A mixer volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeBusMixerA(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets Bus B mixer volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeBusMixerB(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets Bus C mixer volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeBusMixerC(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets Bus D mixer volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeBusMixerD(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets Bus E mixer volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeBusMixerE(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets Bus F mixer volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeBusMixerF(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets Bus G mixer volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeBusMixerG(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets Bus M (Master) mixer volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeBusMixerM(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel 1 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannel1(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel 2 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannel2(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    #endregion
+
+    #region Set Volume Channel Mixer 1-16
+    
+    /// <summary>Sets channel mixer 1 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer1(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 2 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer2(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 3 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer3(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 4 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer4(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 5 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer5(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 6 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer6(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 7 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer7(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 8 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer8(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 9 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer9(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 10 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer10(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 11 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer11(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 12 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer12(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 13 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer13(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 14 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer14(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 15 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer15(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    /// <summary>Sets channel mixer 16 volume for the specified input (0-100).</summary>
+    public Task<string> SetVolumeChannelMixer16(string input, int volume) => SendAsync(new { Input = input, Value = Math.Clamp(volume, 0, 100) });
+    
+    #endregion
+
+    #region Volume Fade and Solo
+    
+    /// <summary>Fades volume for the specified input to target level over duration.</summary>
+    public Task<string> SetVolumeFade(string input, int volume, int duration) => SendAsync(new { Input = input, Value = $"{Math.Clamp(volume, 0, 100)},{duration}" });
+    
+    /// <summary>Toggles solo for the specified input.</summary>
+    public Task<string> Solo(string input) => SendAsync(new { Input = input });
+    
+    /// <summary>Disables all solo.</summary>
+    public Task<string> SoloAllOff() => SendAsync();
+    
+    /// <summary>Disables solo for the specified input.</summary>
+    public Task<string> SoloOff(string input) => SendAsync(new { Input = input });
+    
+    /// <summary>Enables solo for the specified input.</summary>
+    public Task<string> SoloOn(string input) => SendAsync(new { Input = input });
+    
+    /// <summary>Toggles solo PFL (Pre-Fader Listen).</summary>
+    public Task<string> SoloPFL() => SendAsync();
+    
+    /// <summary>Disables solo PFL.</summary>
+    public Task<string> SoloPFLOff() => SendAsync();
+    
+    /// <summary>Enables solo PFL.</summary>
+    public Task<string> SoloPFLOn() => SendAsync();
+    
+    #endregion
 }

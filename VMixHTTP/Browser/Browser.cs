@@ -1,53 +1,35 @@
-﻿namespace VMixHTTP.Browser;
+﻿namespace VMixHTTP;
 
-internal class Browser
+/// <summary>
+/// Partial class containing browser-related vMix API commands.
+/// </summary>
+public partial class vMixClient
 {
-    internal static string BrowserBack(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=BrowserBack&Input={input}";
-    }
+    #region Browser Controls
     
-    internal static string BrowserForward(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=BrowserForward&Input={input}";
-    }
-
-    internal static string BrowserKeyboardDisabled(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=BrowserKeyboardDisabled&Input={input}";
-    }
+    /// <summary>Navigates the browser input back.</summary>
+    public Task<string> BrowserBack(string input) => SendAsync(new { Input = input });
     
-    internal static string BrowserKeyboardEnabled(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=BrowserKeyboardEnabled&Input={input}";
-    }
+    /// <summary>Navigates the browser input forward.</summary>
+    public Task<string> BrowserForward(string input) => SendAsync(new { Input = input });
     
-    internal static string BrowserMouseDisabled(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=BrowserMouseDisabled&Input={input}";
-    }
+    /// <summary>Disables keyboard input for the browser.</summary>
+    public Task<string> BrowserKeyboardDisabled(string input) => SendAsync(new { Input = input });
     
-    internal static string BrowserMouseEnabled(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=BrowserMouseEnabled&Input={input}";
-    }
+    /// <summary>Enables keyboard input for the browser.</summary>
+    public Task<string> BrowserKeyboardEnabled(string input) => SendAsync(new { Input = input });
     
-    internal static string BrowserNavigate(string input, string url)
-    {
-        input = Uri.EscapeDataString(input);
-        url = Uri.EscapeDataString(url);
-        return $"Function=BrowserNavigate&Input={input}&Value={url}";
-    }
+    /// <summary>Disables mouse input for the browser.</summary>
+    public Task<string> BrowserMouseDisabled(string input) => SendAsync(new { Input = input });
     
-    internal static string BrowserReload(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=BrowserReload&Input={input}";
-    }
+    /// <summary>Enables mouse input for the browser.</summary>
+    public Task<string> BrowserMouseEnabled(string input) => SendAsync(new { Input = input });
+    
+    /// <summary>Navigates the browser to the specified URL.</summary>
+    public Task<string> BrowserNavigate(string input, string url) => SendAsync(new { Input = input, Value = url });
+    
+    /// <summary>Reloads the browser input.</summary>
+    public Task<string> BrowserReload(string input) => SendAsync(new { Input = input });
+    
+    #endregion
 }

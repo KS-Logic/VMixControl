@@ -1,6 +1,9 @@
-﻿namespace VMixHTTP.Layers;
+﻿namespace VMixHTTP;
 
-public class Layers
+/// <summary>
+/// Partial class containing layers-related vMix API commands.
+/// </summary>
+public partial class vMixClient
 {
-    
+    // Layers commands will be added here
 }

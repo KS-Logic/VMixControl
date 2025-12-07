@@ -1,73 +1,55 @@
-﻿namespace VMixHTTP.Datasource;
+﻿namespace VMixHTTP;
 
-public class Datasource
+/// <summary>
+/// Partial class containing datasource-related vMix API commands.
+/// </summary>
+public partial class vMixClient
 {
-    internal static string DataSourceAutoNextOff(string datasourceName, string table)
-    {
-        datasourceName = Uri.EscapeDataString(datasourceName);
-        table = Uri.EscapeDataString(table);
-        return $"Function=DataSourceAutoNextOff&Value={datasourceName},{table}";
-    }
+    #region DataSource Controls
     
-    internal static string DataSourceAutoNextOn(string datasourceName, string table)
-    {
-        datasourceName = Uri.EscapeDataString(datasourceName);
-        table = Uri.EscapeDataString(table);
-        return $"Function=DataSourceAutoNextOn&Value={datasourceName},{table}";
-    }
+    /// <summary>Disables auto-next for the datasource table.</summary>
+    public Task<string> DataSourceAutoNextOff(string datasourceName, string table) 
+        => SendAsync(new { Value = $"{datasourceName},{table}" });
     
-    internal static string DataSourceAutoNextOnOff(string datasourceName, string table)
-    {
-        datasourceName = Uri.EscapeDataString(datasourceName);
-        table = Uri.EscapeDataString(table);
-        return $"Function=DataSourceAutoNextOnOff&Value={datasourceName},{table}";
-    }
+    /// <summary>Enables auto-next for the datasource table.</summary>
+    public Task<string> DataSourceAutoNextOn(string datasourceName, string table) 
+        => SendAsync(new { Value = $"{datasourceName},{table}" });
     
-    internal static string DataSourceNextRow(string datasourceName, string table)
-    {
-        datasourceName = Uri.EscapeDataString(datasourceName);
-        table = Uri.EscapeDataString(table);
-        return $"Function=DataSourceNextRow&Value={datasourceName},{table}";
-    }
+    /// <summary>Toggles auto-next for the datasource table.</summary>
+    public Task<string> DataSourceAutoNextOnOff(string datasourceName, string table) 
+        => SendAsync(new { Value = $"{datasourceName},{table}" });
     
-    internal static string DataSourcePause(string datasourceName, string table)
-    {
-        datasourceName = Uri.EscapeDataString(datasourceName);
-        table = Uri.EscapeDataString(table);
-        return $"Function=DataSourcePause&Value={datasourceName},{table}";
-    }
+    /// <summary>Moves to the next row in the datasource table.</summary>
+    public Task<string> DataSourceNextRow(string datasourceName, string table) 
+        => SendAsync(new { Value = $"{datasourceName},{table}" });
     
-    internal static string DataSourcePlay(string datasourceName, string table)
-    {
-        datasourceName = Uri.EscapeDataString(datasourceName);
-        table = Uri.EscapeDataString(table);
-        return $"Function=DataSourcePlay&Value={datasourceName},{table}";
-    }
+    /// <summary>Pauses the datasource table.</summary>
+    public Task<string> DataSourcePause(string datasourceName, string table) 
+        => SendAsync(new { Value = $"{datasourceName},{table}" });
     
-    internal static string DataSourcePlayPause(string datasourceName, string table)
-    {
-        datasourceName = Uri.EscapeDataString(datasourceName);
-        table = Uri.EscapeDataString(table);
-        return $"Function=DataSourcePlayPause&Value={datasourceName},{table}";
-    }
+    /// <summary>Plays the datasource table.</summary>
+    public Task<string> DataSourcePlay(string datasourceName, string table) 
+        => SendAsync(new { Value = $"{datasourceName},{table}" });
     
-    internal static string DataSourcePreviousRow(string datasourceName, string table)
-    {
-        datasourceName = Uri.EscapeDataString(datasourceName);
-        table = Uri.EscapeDataString(table);
-        return $"Function=DataSourcePreviousRow&Value={datasourceName},{table}";
-    }
+    /// <summary>Toggles play/pause for the datasource table.</summary>
+    public Task<string> DataSourcePlayPause(string datasourceName, string table) 
+        => SendAsync(new { Value = $"{datasourceName},{table}" });
     
-    internal static string DataSourceSelectRow(string datasourceName, string table, int index, int rowNumber = -1, int n = -1)
-    {
-        datasourceName = Uri.EscapeDataString(datasourceName);
-        table = Uri.EscapeDataString(table);
-        
-        if (rowNumber == -1 && n == -1)
-            return $"Function=DataSourceSelectRow&Value={datasourceName},{table},{index}";
-        if (rowNumber != -1 && n == -1)
-            return $"Function=DataSourceSelectRow&Value={datasourceName},{table},{index},{rowNumber}";
-        
-        return $"Function=DataSourceSelectRow&Value={datasourceName},{table},{index},{rowNumber},{n}";
-    }
+    /// <summary>Moves to the previous row in the datasource table.</summary>
+    public Task<string> DataSourcePreviousRow(string datasourceName, string table) 
+        => SendAsync(new { Value = $"{datasourceName},{table}" });
+    
+    /// <summary>Selects a specific row in the datasource table.</summary>
+    public Task<string> DataSourceSelectRow(string datasourceName, string table, int index) 
+        => SendAsync(new { Value = $"{datasourceName},{table},{index}" });
+    
+    /// <summary>Selects a specific row in the datasource table with row number.</summary>
+    public Task<string> DataSourceSelectRow(string datasourceName, string table, int index, int rowNumber) 
+        => SendAsync(new { Value = $"{datasourceName},{table},{index},{rowNumber}" });
+    
+    /// <summary>Selects a specific row in the datasource table with row number and n.</summary>
+    public Task<string> DataSourceSelectRow(string datasourceName, string table, int index, int rowNumber, int n) 
+        => SendAsync(new { Value = $"{datasourceName},{table},{index},{rowNumber},{n}" });
+    
+    #endregion
 }

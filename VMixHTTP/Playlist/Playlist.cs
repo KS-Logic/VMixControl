@@ -1,6 +1,9 @@
-﻿namespace VMixHTTP.Playlist;
+﻿namespace VMixHTTP;
 
-public class Playlist
+/// <summary>
+/// Partial class containing playlist-related vMix API commands.
+/// </summary>
+public partial class vMixClient
 {
-    
+    // Playlist commands will be added here
 }

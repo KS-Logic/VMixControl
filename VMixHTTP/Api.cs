@@ -1,23 +1,25 @@
 ﻿namespace VMixHTTP;
 
-using VMixHTTP.Audio;
+using System.Net;
+using VMixHTTP.Exceptions;
 
 /// <summary>
 /// Represents a client for interacting with the vMix HTTP API.
 /// </summary>
-public class vMixClient
+public partial class vMixClient
 {
     private readonly HttpClient _client;
-    private readonly string _url;
+    private readonly string _baseUrl;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="vMixClient"/> class.
     /// </summary>
-    /// <param name="url">The base URL of the vMix instance.</param>
-    public vMixClient(string url)
+    /// <param name="client">The HTTP Client to be used</param>
+    /// <param name="baseUrl">The base URL of the vMix instance.</param>
+    public vMixClient(HttpClient client, string baseUrl)
     {
-        _client = new HttpClient();
-        _url = url;
+        _client = client ?? throw new ArgumentNullException(nameof(client));
+        _baseUrl = baseUrl?.TrimEnd('/') ?? throw new ArgumentNullException(nameof(baseUrl));
     }
 
     /// <summary>
@@ -32,11 +34,11 @@ public class vMixClient
     /// <summary>
     /// Gets the details of the vMix instance asynchronously.
     /// </summary>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the vMix information in XML format.</returns>
-    public async Task<string> GetvMixAsync()
+    /// <returns>A task that represents the asynchronous operation. The task result contains the vMix object.</returns>
+    public async Task<vMix> GetvMixAsync()
     {
-        //should return xml with information about the vMix instance
-        return await SendRequestAsync("");
+        var response = await SendRequestAsync("");
+        return vMixXMLParser.Parse(response);
     }
 
     /// <summary>
@@ -46,141 +48,90 @@ public class vMixClient
     /// <returns>A task that represents the asynchronous operation. The task result contains the API response.</returns>
     private async Task<string> SendRequestAsync(string request)
     {
-        var response = await _client.GetAsync($"{_url}/api/?{request}");
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStringAsync();
+        var url = string.IsNullOrEmpty(request) 
+            ? $"{_baseUrl}/api/" 
+            : $"{_baseUrl}/api/?{request}";
+        
+        try
+        {
+            var response = await _client.GetAsync(url);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                var statusCode = (int)response.StatusCode;
+                var errorMessage = response.StatusCode == HttpStatusCode.NotFound
+                    ? $"vMix API endpoint not found. Ensure vMix is running at {_baseUrl}"
+                    : $"vMix API request failed with status code {statusCode}: {response.ReasonPhrase}";
+                
+                throw new vMixApiException(errorMessage, url, statusCode);
+            }
+            
+            return await response.Content.ReadAsStringAsync();
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new vMixApiException($"Failed to connect to vMix API at {url}. Ensure vMix is running and accessible.", url, innerException: ex);
+        }
+        catch (TaskCanceledException ex)
+        {
+            throw new vMixApiException($"Request to vMix API timed out: {url}", url, innerException: ex);
+        }
+        catch (vMixApiException)
+        {
+            // Re-throw vMixApiException as-is
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new vMixApiException($"Unexpected error calling vMix API: {ex.Message}", url, innerException: ex);
+        }
     }
 
     /// <summary>
-    /// Mutes or unmutes the audio of the specified input asynchronously.
+    /// Executes a command string and returns the API response.
     /// </summary>
-    /// <param name="input">The input identifier.</param>
+    /// <param name="commandString">The command query string.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the API response.</returns>
-    public async Task<string> AudioMuteUnmuteAsync(string input)
+    private Task<string> ExecuteCommandAsync(string commandString) 
+        => SendRequestAsync(commandString);
+
+    /// <summary>
+    /// Sends a command to the vMix API using the calling method's name as the function name.
+    /// </summary>
+    /// <param name="parameters">Optional anonymous object containing command parameters (Input, Value, etc.).</param>
+    /// <param name="functionName">The function name, automatically captured from the calling method.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the API response.</returns>
+    private Task<string> SendAsync(object? parameters = null, [System.Runtime.CompilerServices.CallerMemberName] string functionName = "")
     {
-        return await SendRequestAsync(Audio.Audio.AudioMuteUnmute(input));
+        var queryString = BuildQueryString(functionName, parameters);
+        return ExecuteCommandAsync(queryString);
     }
 
     /// <summary>
-    /// Sets the audio of the specified input to auto mode asynchronously.
+    /// Builds a query string from the function name and parameters object.
     /// </summary>
-    /// <param name="input">The input identifier.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the API response.</returns>
-    public async Task<string> AudioAutoAsync(string input)
+    /// <param name="functionName">The vMix function name.</param>
+    /// <param name="parameters">An anonymous object containing the parameters.</param>
+    /// <returns>The formatted query string.</returns>
+    private static string BuildQueryString(string functionName, object? parameters)
     {
-        return await SendRequestAsync(Audio.Audio.AudioAuto(input));
-    }
-
-    /// <summary>
-    /// Turns off the auto mode for the audio of the specified input asynchronously.
-    /// </summary>
-    /// <param name="input">The input identifier.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the API response.</returns>
-    public async Task<string> AudioAutoOffAsync(string input)
-    {
-        return await SendRequestAsync(Audio.Audio.AudioAutoOff(input));
-    }
-
-    /// <summary>
-    /// Turns on the auto mode for the audio of the specified input asynchronously.
-    /// </summary>
-    /// <param name="input">The input identifier.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the API response.</returns>
-    public async Task<string> AudioAutoOnAsync(string input)
-    {
-        return await SendRequestAsync(Audio.Audio.AudioAutoOn(input));
-    }
-
-    /// <summary>
-    /// Assigns the specified input to the specified audio bus asynchronously.
-    /// </summary>
-    /// <param name="input">The input identifier.</param>
-    /// <param name="bus">The bus identifier.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the API response.</returns>
-    public async Task<string> AudioBusAsync(string input, string bus)
-    {
-        return await SendRequestAsync(Audio.Audio.AudioBus(input, bus));
-    }
-
-    /// <summary>
-    /// Removes the specified input from the specified audio bus asynchronously.
-    /// </summary>
-    /// <param name="input">The input identifier.</param>
-    /// <param name="bus">The bus identifier.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the API response.</returns>
-    public async Task<string> AudioBusOffAsync(string input, string bus)
-    {
-        return await SendRequestAsync(Audio.Audio.AudioBusOff(input, bus));
-    }
-
-    /// <summary>
-    /// Adds the specified input to the specified audio bus asynchronously.
-    /// </summary>
-    /// <param name="input">The input identifier.</param>
-    /// <param name="bus">The bus identifier.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the API response.</returns>
-    public async Task<string> AudioBusOnAsync(string input, string bus)
-    {
-        return await SendRequestAsync(Audio.Audio.AudioBusOn(input, bus));
-    }
-
-    /// <summary>
-    /// Applies the specified matrix preset to the audio channel of the specified input asynchronously.
-    /// </summary>
-    /// <param name="input">The input identifier.</param>
-    /// <param name="preset">The matrix preset identifier.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the API response.</returns>
-    public async Task<string> AudioChannelApplyMatrixPresetAsync(string input, string preset)
-    {
-        return await SendRequestAsync(Audio.Audio.AudioChannelApplyMatrixPreset(input, preset));
-    }
-
-    /// <summary>
-    /// Shows or hides the audio mixer asynchronously.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the API response.</returns>
-    public async Task<string> AudioMixerShowHideAsync()
-    {
-        return await SendRequestAsync(Audio.Audio.AudioMixerShowHide());
-    }
-
-    /// <summary>
-    /// Turns off the audio of the specified input asynchronously.
-    /// </summary>
-    /// <param name="input">The input identifier.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the API response.</returns>
-    public async Task<string> AudioOffAsync(string input)
-    {
-        return await SendRequestAsync(Audio.Audio.AudioOff(input));
-    }
-
-    /// <summary>
-    /// Turns on the audio of the specified input asynchronously.
-    /// </summary>
-    /// <param name="input">The input identifier.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the API response.</returns>
-    public async Task<string> AudioOnAsync(string input)
-    {
-        return await SendRequestAsync(Audio.Audio.AudioOn(input));
-    }
-
-    public async Task<string> AudioPluginOnAsync(string input, int pluginNumber)
-    {
-        return await SendRequestAsync(Audio.Audio.AudioPluginOn(input, pluginNumber));
-    }
-
-    public async Task<string> AudioPluginOffAsync(string input, int pluginNumber)
-    {
-        return await SendRequestAsync(Audio.Audio.AudioPluginOff(input, pluginNumber));
-    }
-
-    public async Task<string> AudioPluginOnOffAsync(string input, int pluginNumber)
-    {
-        return await SendRequestAsync(Audio.Audio.AudioPluginOnOff(input, pluginNumber));
-    }
-    
-    public async Task<string> AudioPluginShowAsync(string input, int pluginNumber)
-    {
-        return await SendRequestAsync(Audio.Audio.AudioPluginShow(input, pluginNumber));
+        var parts = new List<string> { $"Function={functionName}" };
+        
+        if (parameters != null)
+        {
+            foreach (var prop in parameters.GetType().GetProperties())
+            {
+                var value = prop.GetValue(parameters);
+                if (value != null)
+                {
+                    var stringValue = value is double d 
+                        ? d.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)
+                        : value.ToString();
+                    parts.Add($"{prop.Name}={Uri.EscapeDataString(stringValue!)}");
+                }
+            }
+        }
+        
+        return string.Join("&", parts);
     }
 }

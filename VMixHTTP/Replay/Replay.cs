@@ -1,6 +1,9 @@
-﻿namespace VMixHTTP.Replay;
+﻿namespace VMixHTTP;
 
-public class Replay
+/// <summary>
+/// Partial class containing replay-related vMix API commands.
+/// </summary>
+public partial class vMixClient
 {
-    
+    // Replay commands will be added here
 }

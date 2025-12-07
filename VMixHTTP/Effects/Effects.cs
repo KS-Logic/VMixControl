@@ -1,112 +1,78 @@
-﻿using System.Globalization;
+﻿namespace VMixHTTP;
 
-namespace VMixHTTP.Effects;
-
-public class Effects
+/// <summary>
+/// Partial class containing effects-related vMix API commands.
+/// </summary>
+public partial class vMixClient
 {
-    internal static string Effect1(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=Effect1&Input={input}";
-    }
+    #region Effect 1
     
-    internal static string Effect1Off(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=Effect1Off&Input={input}";
-    }
+    /// <summary>Toggles effect 1 for the specified input.</summary>
+    public Task<string> Effect1(string input) => SendAsync(new { Input = input });
     
-    internal static string Effect1On(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=Effect1On&Input={input}";
-    }
+    /// <summary>Disables effect 1 for the specified input.</summary>
+    public Task<string> Effect1Off(string input) => SendAsync(new { Input = input });
     
-    internal static string Effect2(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=Effect2&Input={input}";
-    }
+    /// <summary>Enables effect 1 for the specified input.</summary>
+    public Task<string> Effect1On(string input) => SendAsync(new { Input = input });
     
-    internal static string Effect2Off(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=Effect2Off&Input={input}";
-    }
+    /// <summary>Sets effect 1 strength for the specified input (0-1).</summary>
+    public Task<string> SetEffect1Strength(string input, double strength) => SendAsync(new { Input = input, Value = Math.Clamp(strength, 0, 1) });
     
-    internal static string Effect2On(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=Effect2On&Input={input}";
-    }
+    #endregion
+
+    #region Effect 2
     
-    internal static string Effect3(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=Effect3&Input={input}";
-    }
+    /// <summary>Toggles effect 2 for the specified input.</summary>
+    public Task<string> Effect2(string input) => SendAsync(new { Input = input });
     
-    internal static string Effect3Off(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=Effect3Off&Input={input}";
-    }
+    /// <summary>Disables effect 2 for the specified input.</summary>
+    public Task<string> Effect2Off(string input) => SendAsync(new { Input = input });
     
-    internal static string Effect3On(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=Effect3On&Input={input}";
-    }
+    /// <summary>Enables effect 2 for the specified input.</summary>
+    public Task<string> Effect2On(string input) => SendAsync(new { Input = input });
     
-    internal static string Effect4(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=Effect4&Input={input}";
-    }
+    /// <summary>Sets effect 2 strength for the specified input (0-1).</summary>
+    public Task<string> SetEffect2Strength(string input, double strength) => SendAsync(new { Input = input, Value = Math.Clamp(strength, 0, 1) });
     
-    internal static string Effect4Off(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=Effect4Off&Input={input}";
-    }
+    #endregion
+
+    #region Effect 3
     
-    internal static string Effect4On(string input)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=Effect4On&Input={input}";
-    }
+    /// <summary>Toggles effect 3 for the specified input.</summary>
+    public Task<string> Effect3(string input) => SendAsync(new { Input = input });
     
-    internal static string SetEffect1Strength(string input, double strength)
-    {
-        strength = Math.Clamp(strength, 0, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetEffect1Strength&Input={input}&Value={strength.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Disables effect 3 for the specified input.</summary>
+    public Task<string> Effect3Off(string input) => SendAsync(new { Input = input });
     
-    internal static string SetEffect2Strength(string input, double strength)
-    {
-        strength = Math.Clamp(strength, 0, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetEffect2Strength&Input={input}&Value={strength.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Enables effect 3 for the specified input.</summary>
+    public Task<string> Effect3On(string input) => SendAsync(new { Input = input });
     
-    internal static string SetEffect3Strength(string input, double strength)
-    {
-        strength = Math.Clamp(strength, 0, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetEffect3Strength&Input={input}&Value={strength.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Sets effect 3 strength for the specified input (0-1).</summary>
+    public Task<string> SetEffect3Strength(string input, double strength) => SendAsync(new { Input = input, Value = Math.Clamp(strength, 0, 1) });
     
-    internal static string SetEffect4Strength(string input, double strength)
-    {
-        strength = Math.Clamp(strength, 0, 1);
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetEffect4Strength&Input={input}&Value={strength.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    #endregion
+
+    #region Effect 4
     
-    internal static string SetFrameDelay(string input, double delay)
-    {
-        input = Uri.EscapeDataString(input);
-        return $"Function=SetFrameDelay&Input={input}&Value={delay.ToString("0.0", CultureInfo.InvariantCulture)}";
-    }
+    /// <summary>Toggles effect 4 for the specified input.</summary>
+    public Task<string> Effect4(string input) => SendAsync(new { Input = input });
+    
+    /// <summary>Disables effect 4 for the specified input.</summary>
+    public Task<string> Effect4Off(string input) => SendAsync(new { Input = input });
+    
+    /// <summary>Enables effect 4 for the specified input.</summary>
+    public Task<string> Effect4On(string input) => SendAsync(new { Input = input });
+    
+    /// <summary>Sets effect 4 strength for the specified input (0-1).</summary>
+    public Task<string> SetEffect4Strength(string input, double strength) => SendAsync(new { Input = input, Value = Math.Clamp(strength, 0, 1) });
+    
+    #endregion
+
+    #region Frame Delay
+    
+    /// <summary>Sets the frame delay for the specified input.</summary>
+    public Task<string> SetFrameDelay(string input, double delay) => SendAsync(new { Input = input, Value = delay });
+    
+    #endregion
 }
