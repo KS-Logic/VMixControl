@@ -13,6 +13,12 @@ public static class vMixXMLParser
     public static vMix Parse(string xml)
     {
         var doc = XDocument.Parse(xml);
+        
+        if (doc.Root is null)
+        {
+            throw new FormatException("Invalid XML document");
+        }
+        
         var vmix = new vMix
         {
             Version = doc.Root.Element("version")?.Value,
@@ -52,11 +58,11 @@ public static class vMixXMLParser
             Audio = doc.Root.Element("audio")?.Elements().Select(e => new vMixAudio
             {
                 Name = e.Name.LocalName,
-                Volume = int.Parse(e.Attribute("volume")?.Value ?? "0"),
+                Volume = double.Parse(e.Attribute("volume")?.Value ?? "0"),
                 Muted = bool.Parse(e.Attribute("muted")?.Value ?? "false"),
-                meterF1 = int.Parse(e.Attribute("meterF1")?.Value ?? "0"),
-                meterF2 = int.Parse(e.Attribute("meterF2")?.Value ?? "0"),
-                HeadphonesVolume = int.Parse(e.Attribute("headphonesVolume")?.Value ?? "0")
+                meterF1 = double.Parse(e.Attribute("meterF1")?.Value ?? "0"),
+                meterF2 = double.Parse(e.Attribute("meterF2")?.Value ?? "0"),
+                HeadphonesVolume = double.Parse(e.Attribute("headphonesVolume")?.Value ?? "0")
             }).ToList()
         };
 

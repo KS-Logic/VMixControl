@@ -72,9 +72,9 @@ public class vMixTransition
 public class vMixAudio
 {
     public string Name { get; set; }
-    public int Volume { get; set; }
+    public double Volume { get; set; }
     public bool Muted { get; set; }
-    public int meterF1 { get; set; }
-    public int meterF2 { get; set; }
-    public int HeadphonesVolume { get; set; }
+    public double meterF1 { get; set; }
+    public double meterF2 { get; set; }
+    public double HeadphonesVolume { get; set; }
 }
